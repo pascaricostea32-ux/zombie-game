@@ -8,44 +8,35 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/upload-artifact@v4
-      - uses: actions/upload-artifact@v4
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - name: Install dependencies
-        run: |
-          npm install -g @ionic/cli @capacitor/cli
-          npm init -y
-          npm install @capacitor/core @capacitor/android
-
-      - name: Setup Capacitor
-        run: |
-          mkdir -p www
-          cp game.html www/index.html
-          cat > capacitor.config.json << 'EOF'
-          {
-            "appId": "com.zombie.game",
-            "appName": "ZombieGame",
-            "webDir": "www",
-            "bundledWebRuntime": false
-          }
-          EOF
-          npx cap add android
-
-      - uses: actions/upload-artifact@v4
+      - uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Install Cordova
+        run: npm install -g cordova
+
+      - name: Create Cordova project
+        run: |
+          cordova create myapp com.zombie.game ZombieGame
+          cd myapp
+          cordova platform add android
+          cp ../game.html www/index.html
+
       - name: Build APK
         run: |
-          cd android
-          chmod +x gradlew
-          ./gradlew assembleDebug
+          cd myapp
+          cordova build android
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: zombie-game
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: myapp/platforms/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
