@@ -25,7 +25,7 @@ jobs:
       - name: Create Cordova project
         run: |
           cordova create myapp com.zombie.game ZombieGame
-          cp game.html myapp/www/index.html
+          cp "game (4).html" myapp/www/index.html
           cd myapp
           cordova platform add android
 
