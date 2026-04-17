@@ -8,9 +8,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-node@v3
+      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           node-version: '18'
 
@@ -34,7 +33,7 @@ jobs:
           EOF
           npx cap add android
 
-      - uses: actions/setup-java@v3
+      - uses: actions/upload-artifact@v4
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -46,7 +45,7 @@ jobs:
           ./gradlew assembleDebug
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: zombie-game
           path: android/app/build/outputs/apk/debug/app-debug.apk
