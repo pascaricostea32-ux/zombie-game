@@ -22,12 +22,12 @@ jobs:
       - name: Install Cordova
         run: npm install -g cordova
 
-      - name: Create Cordova project
+      - - name: Create Cordova project
         run: |
           cordova create myapp com.zombie.game ZombieGame
+          cp game.html myapp/www/index.html
           cd myapp
           cordova platform add android
-          cp ../game.html www/index.html
 
       - name: Build APK
         run: |
